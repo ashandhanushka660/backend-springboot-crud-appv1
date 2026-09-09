@@ -1,40 +1,31 @@
-package com.helloworlddemo.hellodemohelo.controllers;
+package com.example.demo.controller;
 
-import com.helloworlddemo.hellodemohelo.model.User;
-import com.helloworlddemo.hellodemohelo.services.UserService;
+import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "http://localhost:3000", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE}) // CORS error එක නැති කිරීමට Next.js URL එක ලබා දීම
+@CrossOrigin(origins = "*") // Netlify Frontend එකෙන් එන requests පිළිගැනීමට
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
-    // 1. Create / Register API
-    @PostMapping("/register")
-    public User registerUser(@RequestBody User user) {
-        return userService.register(user);
-    }
+    // Login Endpoint එක (Database එකෙන් email/password චෙක් කිරීම)
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody User loginUser) {
+        // Database එකෙන් email එක හරහා user කෙනෙක් ඉන්නවද බලනවා
+        User existingUser = userRepository.findByEmail(loginUser.getEmail());
 
-    // 2. Read / Get All Users API
-    @GetMapping("/")
-    public List<User> getUsers() {
-        return userService.getAllUsers();
-    }
+        // User නැත්නම් හෝ Password එක වැරදි නම් 401 Unauthorized දෙනවා
+        if (existingUser == null || !existingUser.getPassword().equals(loginUser.getPassword())) {
+            return ResponseEntity.status(401).body("Invalid Email or Password! User not found in database.");
+        }
 
-    // 3. Update API (PUT Request)
-    @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
-        return userService.updateUser(id, user);
-    }
-
-    // 4. Delete API (DELETE Request)
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+        // සාර්ථක නම් Login Successful දෙනවා
+        return ResponseEntity.ok("Login Successful!");
     }
 }

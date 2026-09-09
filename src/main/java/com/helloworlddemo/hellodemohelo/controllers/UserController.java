@@ -1,4 +1,4 @@
-package com.helloworlddemo.hellodemohelo.controller;
+package com.helloworlddemo.hellodemohelo.controllers;
 
 import com.helloworlddemo.hellodemohelo.model.User;
 import com.helloworlddemo.hellodemohelo.repository.UserRepository;

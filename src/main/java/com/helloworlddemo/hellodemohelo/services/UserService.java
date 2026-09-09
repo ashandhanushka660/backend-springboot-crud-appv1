@@ -1,9 +1,10 @@
 package com.helloworlddemo.hellodemohelo.services;
 
 import com.helloworlddemo.hellodemohelo.model.User;
-import com.helloworlddemo.hellodemohelo.repositories.UserRepository;
+import com.helloworlddemo.hellodemohelo.repositories.UserRepository; // මෙතැන 'repositories' ලෙස 's' අකුරක් තිබිය යුතුය!
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -12,28 +13,22 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    // 1. Create (Register)
-    public User register(User user) {
-        return userRepository.save(user);
-    }
-
-    // 2. Read (Get All Users)
+    // සියලුම Users ලා ලබා ගැනීම
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    // 3. Update (User කෙනෙක්ගේ විස්තර වෙනස් කිරීම)
-    public User updateUser(Long id, User updatedUser) {
-        User user = userRepository.findById(id).orElse(null);
-        if (user != null) {
-            user.setName(updatedUser.getName());
-            user.setEmail(updatedUser.getEmail());
-            return userRepository.save(user);
-        }
-        return null;
+    // අලුත් User කෙනෙක් Save කිරීම (Register)
+    public User registerUser(User user) {
+        return userRepository.save(user);
     }
 
-    // 4. Delete (User කෙනෙක්ව ඉවත් කිරීම)
+    // Email එක මඟින් User කෙනෙක් සෙවීම
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    // User කෙනෙක්ව ඩිලීට් කිරීම
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }

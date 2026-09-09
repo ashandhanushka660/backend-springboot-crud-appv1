@@ -1,4 +1,4 @@
-package com.helloworlddemo.hellodemohelo.controllers;
+package com.helloworlddemo.hellodemohelo.controller;
 
 import com.helloworlddemo.hellodemohelo.model.User;
 import com.helloworlddemo.hellodemohelo.repository.UserRepository;
@@ -14,18 +14,19 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    // Login Endpoint එක (Database එකෙන් email/password චෙක් කිරීම)
-    @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody User loginUser) {
-        // Database එකෙන් email එක හරහා user කෙනෙක් ඉන්නවද බලනවා
-        User existingUser = userRepository.findByEmail(loginUser.getEmail());
+    // Register Endpoint එක
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestBody User newUser) {
+        // 1. මේ email එක දැනටමත් ඩේටාබේස් එකේ තියෙනවද බලනවා
+        User existingUser = userRepository.findByEmail(newUser.getEmail());
 
-        // User නැත්නම් හෝ Password එක වැරදි නම් 401 Unauthorized දෙනවා
-        if (existingUser == null || !existingUser.getPassword().equals(loginUser.getPassword())) {
-            return ResponseEntity.status(401).body("Invalid Email or Password! User not found in database.");
+        // 2. user කෙනෙක් ඉන්නවා නම් පමණක් error එකක් දෙනවා
+        if (existingUser != null) {
+            return ResponseEntity.badRequest().body("User already exists!");
         }
 
-        // සාර්ථක නම් Login Successful දෙනවා
-        return ResponseEntity.ok("Login Successful!");
+        // 3. නැත්නම් අලුත් යූසර්ව ඩේටාබේස් එකට save කරනවා
+        userRepository.save(newUser);
+        return ResponseEntity.ok("Registration Successful!");
     }
 }

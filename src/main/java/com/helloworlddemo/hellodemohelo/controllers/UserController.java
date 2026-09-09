@@ -1,7 +1,7 @@
-package com.example.demo.controller;
+package com.helloworlddemo.hellodemohelo.controllers;
 
-import com.example.demo.model.User;
-import com.example.demo.repository.UserRepository;
+import com.helloworlddemo.hellodemohelo.model.User;
+import com.helloworlddemo.hellodemohelo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
